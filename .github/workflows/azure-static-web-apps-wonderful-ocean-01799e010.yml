@@ -42,9 +42,10 @@ jobs:
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_location: "/" # App source code path
           api_location: "/api" # Api source code path - optional
-          output_location: "." # Built app content directory - optional
+          output_location: "" # Built app content directory - leave empty for static files
           github_id_token: ${{ steps.idtoken.outputs.result }}
-          app_build_command: "" # explicitly: don't build the frontend
+          skip_app_build: true # Skip frontend build - index.html is ready
+          skip_api_build: false # Build API to install dependencies
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
