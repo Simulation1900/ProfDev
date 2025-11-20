@@ -2,7 +2,7 @@
   "name": "professional-education-tracker-api",
   "version": "1.0.0",
   "description": "Azure Functions API for Professional Education Tracker",
-  "main": "index.js",
+  "main": "auth.js",
   "scripts": {
     "start": "func start"
   },
