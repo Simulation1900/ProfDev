@@ -21,7 +21,17 @@
       "Bash(.gitignore)",
       "Bash(git commit -m \"$(cat <<''EOF''\nInitial commit: Professional Education Tracker\n\n- Full-stack application with Azure Functions backend\n- JWT authentication with bcrypt password hashing\n- Azure SQL database integration (OvertimeTracker)\n- Interactive dashboard with Chart.js visualizations\n- CSV export functionality\n- Activity filtering and search\n- Mobile-responsive design\n- Test user exclusion from statistics\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(git remote add:*)",
-      "Bash(git branch:*)"
+      "Bash(git branch:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)",
+      "Bash(az:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh secret set:*)",
+      "Bash(gh run rerun:*)",
+      "Bash(gh run watch:*)"
     ],
     "deny": [],
     "ask": []

@@ -1,0 +1,9 @@
+# Exclude files from Azure Functions deployment
+node_modules/
+*.log
+.git/
+.github/
+.vscode/
+*.md
+.env
+local.settings.json

@@ -8,7 +8,6 @@ local.settings.json
 
 # Azure Functions
 .vscode/
-.funcignore
 bin/
 obj/
 
