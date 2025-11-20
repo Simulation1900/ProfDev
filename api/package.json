@@ -2,12 +2,10 @@
   "name": "professional-education-tracker-api",
   "version": "1.0.0",
   "description": "Azure Functions API for Professional Education Tracker",
-  "main": "auth.js",
   "scripts": {
     "start": "func start"
   },
   "dependencies": {
-    "@azure/functions": "^4.0.0",
     "mssql": "^10.0.0",
     "jsonwebtoken": "^9.0.0",
     "bcrypt": "^5.1.0"
