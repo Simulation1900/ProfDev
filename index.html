@@ -662,10 +662,10 @@
     </div>
 
     <script>
-        // Configuration - automatically uses /api in production, localhost for development
+        // Configuration - automatically uses Function App in production, localhost for development
         const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
             ? 'http://localhost:7071/api'
-            : '/api';
+            : 'https://profdev-api.azurewebsites.net/api';
 
         // State management
         let currentUser = null;
