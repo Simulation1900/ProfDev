@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sim Center Ops Team - Continuing Education Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .header {
+            background-color: #1e4d8b;
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+
+        .user-info {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            text-align: right;
+        }
+
+        .user-info span {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .logout-button {
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid white;
+            padding: 5px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .logout-button:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .login-container h2 {
+            color: #1e4d8b;
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .info-section {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .info-section h2 {
+            color: #1e4d8b;
+            margin-bottom: 20px;
+        }
+
+        .info-section ul {
+            line-height: 1.8;
+            color: #555;
+        }
+
+        /* Dashboard Stats */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            color: #1e4d8b;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-sublabel {
+            color: #aaa;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+
+        /* Charts */
+        .chart-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .chart-container h3 {
+            color: #1e4d8b;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+        }
+
+        /* Filtering */
+        .filter-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .filter-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-size: 0.85em;
+            color: #6c757d;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .quick-filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-button {
+            padding: 8px 16px;
+            border: 1px solid #1e4d8b;
+            background-color: white;
+            color: #1e4d8b;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .filter-button:hover {
+            background-color: #f0f5fa;
+        }
+
+        .filter-button.active {
+            background-color: #1e4d8b;
+            color: white;
+        }
+
+        .form-section {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        select, input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .hours-input {
+            width: 150px;
+        }
+
+        .button-primary {
+            background-color: #1e4d8b;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button-primary:hover {
+            background-color: #164070;
+        }
+
+        .button-primary:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .button-secondary {
+            background-color: #6c757d;
+            color: white;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .button-success {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-left: 10px;
+        }
+
+        .button-success:hover {
+            background-color: #218838;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .entries-section {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .team-member-entries {
+            margin-bottom: 30px;
+        }
+
+        .team-member-entries h3 {
+            color: #1e4d8b;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .entry {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border-left: 4px solid #1e4d8b;
+        }
+
+        .entry-category {
+            display: inline-block;
+            background-color: #e9ecef;
+            color: #495057;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+
+        .entry-date {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .entry-description {
+            margin: 5px 0;
+        }
+
+        .entry-hours {
+            font-weight: bold;
+            color: #1e4d8b;
+        }
+
+        .monthly-summary {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .progress-bar {
+            background-color: #e9ecef;
+            height: 25px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            background-color: #28a745;
+            height: 100%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .progress-fill.partial {
+            background-color: #ffc107;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        .requirement-notice {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .delete-button {
+            background-color: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .collapsible {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .collapsible::before {
+            content: '▼ ';
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+
+        .collapsible.collapsed::before {
+            transform: rotate(-90deg);
+        }
+
+        .collapse-content {
+            max-height: 5000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .collapse-content.collapsed {
+            max-height: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-container">
+        <h2>Sim Center Education Tracker</h2>
+        <p style="text-align: center; color: #6c757d; margin-bottom: 30px;">
+            Sign in with your OvertimeTracker credentials
+        </p>
+        <div id="login-alert-container"></div>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="login-username">Email:</label>
+                <input type="text" id="login-username" required autocomplete="username" placeholder="your.email@belmont.edu">
+            </div>
+            <div class="form-group">
+                <label for="login-password">Password:</label>
+                <input type="password" id="login-password" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="button-primary" style="width: 100%;">Sign In</button>
+        </form>
+    </div>
+
+    <!-- Main Application -->
+    <div id="app-screen" class="hidden">
+        <div class="header">
+            <div class="user-info">
+                <span id="user-display-name"></span>
+                <button class="logout-button" onclick="logout()">Sign Out</button>
+            </div>
+            <h1>Continuing Education for the Sim Center Ops Team</h1>
+            <p>Professional Development Tracking System</p>
+        </div>
+
+        <div class="requirement-notice">
+            ⏱️ Monthly Requirement: Each team member must complete a minimum of 2.5 hours of continuing education per month
+        </div>
+
+        <!-- Dashboard Section -->
+        <div class="dashboard">
+            <div class="stat-card">
+                <div class="stat-label">My Hours This Month</div>
+                <div class="stat-number" id="stat-my-hours">0.0</div>
+                <div class="stat-sublabel" id="stat-my-status">Loading...</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Team Average</div>
+                <div class="stat-number" id="stat-team-avg">0.0</div>
+                <div class="stat-sublabel">hours this month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Team Compliance</div>
+                <div class="stat-number" id="stat-compliance">0%</div>
+                <div class="stat-sublabel" id="stat-compliance-text">0 of 0 members</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Activities</div>
+                <div class="stat-number" id="stat-total">0</div>
+                <div class="stat-sublabel">this month</div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; margin-bottom: 30px;">
+            <div class="chart-container">
+                <h3>Monthly Progress</h3>
+                <div class="chart-wrapper">
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-container">
+                <h3>Activity Categories</h3>
+                <div class="chart-wrapper">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collapsible Info Section -->
+        <div class="info-section">
+            <h2 class="collapsible" onclick="toggleSection(this)">Purpose & Guidelines</h2>
+            <div class="collapse-content">
+                <p>This system documents the ongoing professional development of the Simulation Operations Team. Maintaining regular continuing education is both a requirement for SSH Accreditation and a reflection of our commitment to excellence in simulation-based education.</p>
+
+                <h3 style="color: #1e4d8b; margin-top: 20px;">Acceptable Activities</h3>
+                <ul>
+                    <li>Professional podcasts, webinars, or online courses related to simulation, healthcare education, or operations</li>
+                    <li>Books, journal articles, or trade publications focused on simulation, adult learning, or technology integration</li>
+                    <li>Conference sessions, workshops, or local simulation community meetings</li>
+                    <li>YouTube videos, vendor tutorials, or software trainings that enhance operational or technical knowledge</li>
+                </ul>
+                <p><em>All activities should have a direct connection to healthcare simulation, education, or operations, and should contribute meaningfully to your professional growth within the field.</em></p>
+            </div>
+        </div>
+
+        <!-- Form Section -->
+        <div class="form-section">
+            <h2>Submit Continuing Education Activity</h2>
+            <div id="alert-container"></div>
+
+            <form id="ce-form">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div class="form-group">
+                        <label for="activity-date">Date:</label>
+                        <input type="date" id="activity-date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="activity-category">Category:</label>
+                        <select id="activity-category" required>
+                            <option value="">Select category...</option>
+                            <option value="Webinar">Webinar</option>
+                            <option value="Podcast">Podcast</option>
+                            <option value="Article">Article/Journal</option>
+                            <option value="Book">Book</option>
+                            <option value="Conference">Conference/Workshop</option>
+                            <option value="Video">Video Tutorial</option>
+                            <option value="Course">Online Course</option>
+                            <option value="Meeting">Professional Meeting</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="activity-hours">Hours:</label>
+                        <input type="number" id="activity-hours" class="hours-input" min="0.25" max="24" step="0.25" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="activity-description">Activity Description:</label>
+                    <textarea id="activity-description" required placeholder="Enter the activity details, including the source, topic, and what you learned..."></textarea>
+                </div>
+
+                <button type="submit" class="button-primary" id="submit-button">Submit Activity</button>
+            </form>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <h3 style="margin-top: 0; color: #1e4d8b;">Filter & Search</h3>
+
+            <div class="filter-controls">
+                <div class="filter-group">
+                    <label>Search:</label>
+                    <input type="text" id="search-input" placeholder="Search descriptions..." oninput="applyFilters()">
+                </div>
+                <div class="filter-group">
+                    <label>Team Member:</label>
+                    <select id="filter-user" onchange="applyFilters()">
+                        <option value="">All Team Members</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Category:</label>
+                    <select id="filter-category" onchange="applyFilters()">
+                        <option value="">All Categories</option>
+                        <option value="Webinar">Webinar</option>
+                        <option value="Podcast">Podcast</option>
+                        <option value="Article">Article/Journal</option>
+                        <option value="Book">Book</option>
+                        <option value="Conference">Conference/Workshop</option>
+                        <option value="Video">Video Tutorial</option>
+                        <option value="Course">Online Course</option>
+                        <option value="Meeting">Professional Meeting</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label style="display: block; margin-bottom: 10px; font-size: 0.85em; color: #6c757d; font-weight: 600;">Quick Filters:</label>
+                <div class="quick-filters">
+                    <button class="filter-button active" onclick="setDateFilter('all')">All Time</button>
+                    <button class="filter-button" onclick="setDateFilter('thisMonth')">This Month</button>
+                    <button class="filter-button" onclick="setDateFilter('lastMonth')">Last Month</button>
+                    <button class="filter-button" onclick="setDateFilter('thisYear')">This Year</button>
+                    <button class="filter-button" onclick="setDateFilter('myEntries')">My Entries Only</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Entries Section -->
+        <div class="entries-section">
+            <div class="toolbar">
+                <h2 style="margin: 0;">Team Education Log</h2>
+                <button class="button-success" onclick="exportToCSV()">
+                    📊 Export to CSV
+                </button>
+            </div>
+            <div id="entries-container">
+                <div class="loading">Loading education log...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration - automatically uses /api in production, localhost for development
+        const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:7071/api'
+            : '/api';
+
+        // State management
+        let currentUser = null;
+        let authToken = null;
+        let allEntries = [];
+        let allUsers = [];
+        let filteredEntries = [];
+        let currentFilter = 'all';
+
+        // Charts
+        let monthlyChart = null;
+        let categoryChart = null;
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('authToken');
+            const user = localStorage.getItem('currentUser');
+
+            if (token && user) {
+                authToken = token;
+                currentUser = JSON.parse(user);
+                verifyTokenAndLoadApp();
+            } else {
+                showLoginScreen();
+            }
+        });
+
+        // Login form handler
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    showLoginAlert(data.error || 'Login failed', 'error');
+                    return;
+                }
+
+                authToken = data.token;
+                currentUser = data.user;
+                localStorage.setItem('authToken', authToken);
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+                showAppScreen();
+                loadAppData();
+
+            } catch (err) {
+                console.error('Login error:', err);
+                showLoginAlert('Unable to connect to server', 'error');
+            }
+        });
+
+        async function verifyTokenAndLoadApp() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/verify`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (response.ok) {
+                    showAppScreen();
+                    loadAppData();
+                } else {
+                    logout();
+                }
+            } catch (err) {
+                console.error('Token verification error:', err);
+                logout();
+            }
+        }
+
+        async function loadAppData() {
+            try {
+                await Promise.all([loadEntries(), loadUsers()]);
+                updateDashboard();
+                updateCharts();
+            } catch (err) {
+                console.error('Error loading app data:', err);
+                showAlert('Error loading data', 'error');
+            }
+        }
+
+        async function loadEntries() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/education/entries`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to load entries');
+
+                allEntries = await response.json();
+                filteredEntries = [...allEntries];
+                displayEntries();
+            } catch (err) {
+                console.error('Error loading entries:', err);
+                throw err;
+            }
+        }
+
+        async function loadUsers() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/users`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to load users');
+
+                allUsers = await response.json();
+
+                // Populate filter dropdown (exclude test users)
+                const excludeUsers = ['Sim Center', 'System Administrator', 'Sophia Martinez'];
+                const filterUser = document.getElementById('filter-user');
+                filterUser.innerHTML = '<option value="">All Team Members</option>';
+                allUsers.forEach(user => {
+                    if (!excludeUsers.includes(user.full_name)) {
+                        const option = document.createElement('option');
+                        option.value = user.id;
+                        option.textContent = user.full_name;
+                        filterUser.appendChild(option);
+                    }
+                });
+            } catch (err) {
+                console.error('Error loading users:', err);
+                throw err;
+            }
+        }
+
+        // Form submission
+        document.getElementById('ce-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitButton = document.getElementById('submit-button');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
+
+            const date = document.getElementById('activity-date').value;
+            const hours = parseFloat(document.getElementById('activity-hours').value);
+            const description = document.getElementById('activity-description').value;
+            const category = document.getElementById('activity-category').value;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/education/entries`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ date, hours, description, category })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Failed to submit activity');
+                }
+
+                showAlert('Activity successfully submitted!', 'success');
+                document.getElementById('ce-form').reset();
+                document.getElementById('activity-date').valueAsDate = new Date();
+
+                await loadEntries();
+                updateDashboard();
+                updateCharts();
+
+            } catch (err) {
+                console.error('Error submitting activity:', err);
+                showAlert(err.message, 'error');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Submit Activity';
+            }
+        });
+
+        // Dashboard updates
+        function updateDashboard() {
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+
+            // Filter out test users
+            const excludeUsers = ['Sim Center', 'System Administrator', 'Sophia Martinez'];
+            const realUsers = allUsers.filter(u => !excludeUsers.includes(u.full_name));
+
+            // Calculate monthly entries
+            const monthlyEntries = allEntries.filter(e => {
+                const d = new Date(e.ActivityDate);
+                return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+            });
+
+            // My hours
+            const myEntries = monthlyEntries.filter(e => e.UserID === currentUser.userId);
+            const myHours = myEntries.reduce((sum, e) => sum + parseFloat(e.Hours), 0);
+            document.getElementById('stat-my-hours').textContent = myHours.toFixed(1);
+
+            if (myHours >= 2.5) {
+                document.getElementById('stat-my-status').textContent = '✅ Requirement met!';
+                document.getElementById('stat-my-status').style.color = '#28a745';
+            } else {
+                const needed = (2.5 - myHours).toFixed(1);
+                document.getElementById('stat-my-status').textContent = `${needed} hours needed`;
+                document.getElementById('stat-my-status').style.color = '#dc3545';
+            }
+
+            // Team average (excluding test users)
+            const totalHours = monthlyEntries.reduce((sum, e) => sum + parseFloat(e.Hours), 0);
+            const teamAvg = realUsers.length > 0 ? totalHours / realUsers.length : 0;
+            document.getElementById('stat-team-avg').textContent = teamAvg.toFixed(1);
+
+            // Compliance (excluding test users)
+            const userHours = {};
+            realUsers.forEach(u => userHours[u.id] = 0);
+            monthlyEntries.forEach(e => {
+                if (userHours[e.UserID] !== undefined) {
+                    userHours[e.UserID] += parseFloat(e.Hours);
+                }
+            });
+            const compliant = Object.values(userHours).filter(h => h >= 2.5).length;
+            const compliancePercent = realUsers.length > 0 ? Math.round((compliant / realUsers.length) * 100) : 0;
+            document.getElementById('stat-compliance').textContent = `${compliancePercent}%`;
+            document.getElementById('stat-compliance-text').textContent = `${compliant} of ${realUsers.length} members`;
+
+            // Total activities
+            document.getElementById('stat-total').textContent = monthlyEntries.length;
+        }
+
+        // Charts
+        function updateCharts() {
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+
+            // Filter out test users
+            const excludeUsers = ['Sim Center', 'System Administrator', 'Sophia Martinez'];
+            const realUsers = allUsers.filter(u => !excludeUsers.includes(u.full_name));
+
+            // Monthly progress chart
+            const userHours = {};
+            const userNames = {};
+            realUsers.forEach(u => {
+                userHours[u.id] = 0;
+                userNames[u.id] = u.full_name;
+            });
+
+            allEntries.filter(e => {
+                const d = new Date(e.ActivityDate);
+                return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+            }).forEach(e => {
+                if (userHours[e.UserID] !== undefined) {
+                    userHours[e.UserID] += parseFloat(e.Hours);
+                }
+            });
+
+            const sortedUsers = Object.keys(userHours).sort((a, b) => userHours[b] - userHours[a]);
+            const monthlyData = {
+                labels: sortedUsers.map(id => userNames[id]),
+                datasets: [
+                    {
+                        label: 'Hours This Month',
+                        data: sortedUsers.map(id => userHours[id]),
+                        backgroundColor: sortedUsers.map(id => userHours[id] >= 2.5 ? '#28a745' : '#ffc107'),
+                        borderColor: '#1e4d8b',
+                        borderWidth: 1,
+                        order: 2
+                    },
+                    {
+                        label: 'Requirement (2.5 hrs)',
+                        data: sortedUsers.map(() => 2.5),
+                        type: 'line',
+                        borderColor: '#dc3545',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        pointRadius: 0,
+                        fill: false,
+                        order: 1
+                    }
+                ]
+            };
+
+            if (monthlyChart) monthlyChart.destroy();
+            const ctx1 = document.getElementById('monthlyChart').getContext('2d');
+            monthlyChart = new Chart(ctx1, {
+                type: 'bar',
+                data: monthlyData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            align: 'end'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: 5,
+                            title: { display: true, text: 'Hours' },
+                            ticks: {
+                                stepSize: 0.5,
+                                callback: function(value) {
+                                    return value.toFixed(1);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Category chart
+            const categoryCounts = {};
+            allEntries.forEach(e => {
+                const cat = e.Category || 'Other';
+                categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+            });
+
+            const categoryData = {
+                labels: Object.keys(categoryCounts),
+                datasets: [{
+                    data: Object.values(categoryCounts),
+                    backgroundColor: [
+                        '#1e4d8b', '#28a745', '#ffc107', '#dc3545',
+                        '#6c757d', '#17a2b8', '#e83e8c', '#fd7e14', '#20c997'
+                    ]
+                }]
+            };
+
+            if (categoryChart) categoryChart.destroy();
+            const ctx2 = document.getElementById('categoryChart').getContext('2d');
+            categoryChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: categoryData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right' }
+                    }
+                }
+            });
+        }
+
+        // Filtering
+        function applyFilters() {
+            const search = document.getElementById('search-input').value.toLowerCase();
+            const userFilter = document.getElementById('filter-user').value;
+            const categoryFilter = document.getElementById('filter-category').value;
+
+            filteredEntries = allEntries.filter(entry => {
+                // Search filter
+                if (search && !entry.Description.toLowerCase().includes(search)) {
+                    return false;
+                }
+
+                // User filter
+                if (userFilter && entry.UserID !== userFilter) {
+                    return false;
+                }
+
+                // Category filter
+                if (categoryFilter && entry.Category !== categoryFilter) {
+                    return false;
+                }
+
+                // Date filter
+                if (currentFilter !== 'all') {
+                    const entryDate = new Date(entry.ActivityDate);
+                    const now = new Date();
+
+                    if (currentFilter === 'thisMonth') {
+                        if (entryDate.getMonth() !== now.getMonth() || entryDate.getFullYear() !== now.getFullYear()) {
+                            return false;
+                        }
+                    } else if (currentFilter === 'lastMonth') {
+                        const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                        if (entryDate.getMonth() !== lastMonth.getMonth() || entryDate.getFullYear() !== lastMonth.getFullYear()) {
+                            return false;
+                        }
+                    } else if (currentFilter === 'thisYear') {
+                        if (entryDate.getFullYear() !== now.getFullYear()) {
+                            return false;
+                        }
+                    } else if (currentFilter === 'myEntries') {
+                        if (entry.UserID !== currentUser.userId) {
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            });
+
+            displayEntries();
+        }
+
+        function setDateFilter(filter) {
+            currentFilter = filter;
+
+            // Update button states
+            document.querySelectorAll('.filter-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            applyFilters();
+        }
+
+        // Display entries
+        function displayEntries() {
+            const container = document.getElementById('entries-container');
+            container.innerHTML = '';
+
+            const entriesByUser = {};
+            allUsers.forEach(user => {
+                entriesByUser[user.id] = {
+                    user: user,
+                    entries: filteredEntries.filter(e => e.UserID === user.id)
+                };
+            });
+
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+
+            Object.values(entriesByUser).forEach(({ user, entries }) => {
+                if (entries.length === 0) return; // Skip users with no filtered entries
+
+                const memberDiv = document.createElement('div');
+                memberDiv.className = 'team-member-entries';
+
+                const monthlyHours = entries
+                    .filter(entry => {
+                        const entryDate = new Date(entry.ActivityDate);
+                        return entryDate.getMonth() === currentMonth &&
+                               entryDate.getFullYear() === currentYear;
+                    })
+                    .reduce((total, entry) => total + parseFloat(entry.Hours), 0);
+
+                const progressPercent = Math.min(100, (monthlyHours / 2.5) * 100);
+
+                memberDiv.innerHTML = `
+                    <h3>
+                        <span>${user.full_name}</span>
+                        <span style="font-size: 0.8em; font-weight: normal; color: #6c757d;">
+                            ${entries.length} ${entries.length === 1 ? 'entry' : 'entries'}
+                        </span>
+                    </h3>
+                `;
+
+                entries.forEach(entry => {
+                    const entryDiv = document.createElement('div');
+                    entryDiv.className = 'entry';
+
+                    const canDelete = entry.UserID === currentUser.userId;
+
+                    entryDiv.innerHTML = `
+                        <div class="entry-date">
+                            ${formatDate(entry.ActivityDate)}
+                            ${entry.Category ? `<span class="entry-category">${entry.Category}</span>` : ''}
+                        </div>
+                        <div class="entry-description">${escapeHtml(entry.Description)}</div>
+                        <div class="entry-hours">
+                            ${entry.Hours} hour${entry.Hours !== 1 ? 's' : ''}
+                            ${canDelete ? `<button class="delete-button" onclick="deleteEntry(${entry.EntryID})">Delete</button>` : ''}
+                        </div>
+                    `;
+                    memberDiv.appendChild(entryDiv);
+                });
+
+                // Monthly summary with progress bar
+                const summaryDiv = document.createElement('div');
+                summaryDiv.className = 'monthly-summary';
+                const monthName = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+                summaryDiv.innerHTML = `
+                    <strong>${monthName}:</strong> ${monthlyHours.toFixed(1)} hours completed
+                    <div class="progress-bar">
+                        <div class="progress-fill ${monthlyHours >= 2.5 ? '' : 'partial'}" style="width: ${progressPercent}%">
+                            ${progressPercent.toFixed(0)}%
+                        </div>
+                    </div>
+                `;
+
+                memberDiv.appendChild(summaryDiv);
+                container.appendChild(memberDiv);
+            });
+
+            if (container.children.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #6c757d; padding: 40px;">No entries match your filters</p>';
+            }
+        }
+
+        // Export to CSV
+        function exportToCSV() {
+            const csvRows = [];
+
+            // Headers
+            csvRows.push(['Team Member', 'Date', 'Hours', 'Category', 'Description'].join(','));
+
+            // Data
+            filteredEntries.forEach(entry => {
+                const user = allUsers.find(u => u.id === entry.UserID);
+                const row = [
+                    `"${user ? user.full_name : 'Unknown'}"`,
+                    entry.ActivityDate,
+                    entry.Hours,
+                    `"${entry.Category || 'Other'}"`,
+                    `"${entry.Description.replace(/"/g, '""')}"`
+                ];
+                csvRows.push(row.join(','));
+            });
+
+            // Create download
+            const csvString = csvRows.join('\n');
+            const blob = new Blob([csvString], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `education-tracker-${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+
+            showAlert('CSV file downloaded successfully!', 'success');
+        }
+
+        // Delete entry
+        async function deleteEntry(entryId) {
+            if (!confirm('Are you sure you want to delete this entry?')) return;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/education/entries/${entryId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to delete entry');
+
+                showAlert('Entry deleted successfully', 'warning');
+                await loadEntries();
+                updateDashboard();
+                updateCharts();
+
+            } catch (err) {
+                console.error('Error deleting entry:', err);
+                showAlert(err.message, 'error');
+            }
+        }
+
+        // Utility functions
+        function logout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('currentUser');
+            authToken = null;
+            currentUser = null;
+            showLoginScreen();
+        }
+
+        function showLoginScreen() {
+            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('app-screen').classList.add('hidden');
+        }
+
+        function showAppScreen() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('app-screen').classList.remove('hidden');
+            document.getElementById('user-display-name').textContent = currentUser.fullName;
+            document.getElementById('activity-date').valueAsDate = new Date();
+        }
+
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alert-container');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alert);
+            setTimeout(() => alert.remove(), 3000);
+        }
+
+        function showLoginAlert(message, type) {
+            const alertContainer = document.getElementById('login-alert-container');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alert);
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function toggleSection(element) {
+            element.classList.toggle('collapsed');
+            element.nextElementSibling.classList.toggle('collapsed');
+        }
+    </script>
+</body>
+</html>

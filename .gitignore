@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment variables (contains sensitive data)
+.env
+local.settings.json
+
+# Azure Functions
+.vscode/
+.funcignore
+bin/
+obj/
+
+# Build outputs
+dist/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+nul

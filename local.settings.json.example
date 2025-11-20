@@ -1,0 +1,13 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "",
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "SQL_SERVER": "bucies.database.windows.net",
+    "SQL_DATABASE": "OvertimeTracker",
+    "SQL_USER": "simcenter@bucies",
+    "SQL_PASSWORD": "your-password-here",
+    "JWT_SECRET": "generate-a-secure-secret-key-here",
+    "CORS_ORIGINS": "*"
+  }
+}

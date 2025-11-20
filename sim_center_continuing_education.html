@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sim Center Ops Team - Continuing Education Tracker</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .header {
+            background-color: #1e4d8b;
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+        
+        .info-section {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .info-section h2 {
+            color: #1e4d8b;
+            margin-bottom: 20px;
+        }
+        
+        .info-section ul {
+            line-height: 1.8;
+            color: #555;
+        }
+        
+        .form-section {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        select, input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .hours-input {
+            width: 150px;
+        }
+        
+        .button-primary {
+            background-color: #1e4d8b;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .button-primary:hover {
+            background-color: #164070;
+        }
+        
+        .button-secondary {
+            background-color: #6c757d;
+            color: white;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .button-secondary:hover {
+            background-color: #5a6268;
+        }
+        
+        .entries-section {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .team-member-entries {
+            margin-bottom: 30px;
+        }
+        
+        .team-member-entries h3 {
+            color: #1e4d8b;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .entry {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border-left: 4px solid #1e4d8b;
+        }
+        
+        .entry-date {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        
+        .entry-description {
+            margin: 5px 0;
+        }
+        
+        .entry-hours {
+            font-weight: bold;
+            color: #1e4d8b;
+        }
+        
+        .monthly-summary {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+        
+        .requirement-notice {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .delete-button {
+            background-color: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Continuing Education for the Sim Center Ops Team</h1>
+        <p>Professional Development Tracking System</p>
+    </div>
+    
+    <div class="requirement-notice">
+        ⏱️ Monthly Requirement: Each team member must complete a minimum of 2.5 hours of continuing education per month
+    </div>
+    
+    <div class="info-section">
+        <h2>Purpose</h2>
+        <p>This system documents the ongoing professional development of the Simulation Operations Team. Maintaining regular continuing education is both a requirement for SSH Accreditation and a reflection of our commitment to excellence in simulation-based education.</p>
+        
+        <h2>Acceptable Activities</h2>
+        <ul>
+            <li>Professional podcasts, webinars, or online courses related to simulation, healthcare education, or operations</li>
+            <li>Books, journal articles, or trade publications focused on simulation, adult learning, or technology integration</li>
+            <li>Conference sessions, workshops, or local simulation community meetings</li>
+            <li>YouTube videos, vendor tutorials, or software trainings that enhance operational or technical knowledge</li>
+        </ul>
+        <p><em>All activities should have a direct connection to healthcare simulation, education, or operations, and should contribute meaningfully to your professional growth within the field.</em></p>
+    </div>
+    
+    <div class="form-section">
+        <h2>Submit Continuing Education Activity</h2>
+        <div id="alert-container"></div>
+        
+        <form id="ce-form">
+            <div class="form-group">
+                <label for="team-member">Team Member:</label>
+                <select id="team-member" required>
+                    <option value="">Select your name...</option>
+                    <option value="Matt Needler">Matt Needler</option>
+                    <option value="Alex Robinson">Alex Robinson</option>
+                    <option value="Eric Blake">Eric Blake</option>
+                    <option value="Charles Manning">Charles Manning</option>
+                    <option value="Elizabeth Monroe">Elizabeth Monroe</option>
+                    <option value="Davyon Cox">Davyon Cox</option>
+                    <option value="Aaron Patterson">Aaron Patterson</option>
+                    <option value="Caroline Nelson">Caroline Nelson</option>
+                    <option value="Antonio Valenzuela">Antonio Valenzuela</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="activity-date">Date:</label>
+                <input type="date" id="activity-date" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="activity-hours">Hours:</label>
+                <input type="number" id="activity-hours" class="hours-input" min="0.25" max="24" step="0.25" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="activity-description">Activity Description:</label>
+                <textarea id="activity-description" required placeholder="Enter the activity details, including the source, topic, and what you learned..."></textarea>
+            </div>
+            
+            <button type="submit" class="button-primary">Submit Activity</button>
+        </form>
+    </div>
+    
+    <div class="entries-section">
+        <h2>Team Education Log</h2>
+        <div id="entries-container"></div>
+    </div>
+    
+    <script>
+        // Initialize data storage
+        let educationData = JSON.parse(localStorage.getItem('simCenterEducation')) || {};
+        
+        // Pre-populate with existing data from the document
+        if (Object.keys(educationData).length === 0) {
+            educationData = {
+                "Matt Needler": [
+                    {
+                        date: "2025-11-03",
+                        hours: 1,
+                        description: "HealthySimulation.com article: How to scale a mobile medical simulation training system for crisis emergencies."
+                    },
+                    {
+                        date: "2025-11-04",
+                        hours: 1,
+                        description: "Eleventh Annual Brown Lecture in Education Research - American Educational Research Association - YouTube"
+                    }
+                ],
+                "Caroline Nelson": [
+                    {
+                        date: "2025-11-04",
+                        hours: 1,
+                        description: "Spent 1 hr reading excerpts from The Comprehensive Textbook of Healthcare Simulation. Basic history of where/when simulation started."
+                    },
+                    {
+                        date: "2025-11-10",
+                        hours: 1,
+                        description: "Attended The 12th Man: Artificial Intelligence use in Simulation Operations; a panel discussion presented by SOTS."
+                    },
+                    {
+                        date: "2025-11-10",
+                        hours: 0.5,
+                        description: "Combining forces to improve simulation-based practices for Emergency Preparedness and Disaster Responses. Would love to see our center implementing more simulations dedicated to real world emergency preparedness."
+                    }
+                ]
+            };
+            localStorage.setItem('simCenterEducation', JSON.stringify(educationData));
+        }
+        
+        // Form submission handler
+        document.getElementById('ce-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const teamMember = document.getElementById('team-member').value;
+            const date = document.getElementById('activity-date').value;
+            const hours = parseFloat(document.getElementById('activity-hours').value);
+            const description = document.getElementById('activity-description').value;
+            
+            // Add entry to data
+            if (!educationData[teamMember]) {
+                educationData[teamMember] = [];
+            }
+            
+            educationData[teamMember].push({
+                date: date,
+                hours: hours,
+                description: description
+            });
+            
+            // Sort entries by date
+            educationData[teamMember].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // Save to localStorage
+            localStorage.setItem('simCenterEducation', JSON.stringify(educationData));
+            
+            // Show success message
+            showAlert('Activity successfully submitted!', 'success');
+            
+            // Clear form
+            document.getElementById('ce-form').reset();
+            
+            // Update display
+            displayEntries();
+        });
+        
+        // Display entries function
+        function displayEntries() {
+            const container = document.getElementById('entries-container');
+            container.innerHTML = '';
+            
+            const teamMembers = [
+                "Matt Needler", "Alex Robinson", "Eric Blake", "Charles Manning",
+                "Elizabeth Monroe", "Davyon Cox", "Aaron Patterson", "Caroline Nelson",
+                "Antonio Valenzuela"
+            ];
+            
+            teamMembers.forEach(member => {
+                const memberDiv = document.createElement('div');
+                memberDiv.className = 'team-member-entries';
+                
+                const memberEntries = educationData[member] || [];
+                const currentMonth = new Date().getMonth();
+                const currentYear = new Date().getFullYear();
+                
+                // Calculate current month's hours
+                const monthlyHours = memberEntries
+                    .filter(entry => {
+                        const entryDate = new Date(entry.date);
+                        return entryDate.getMonth() === currentMonth && entryDate.getFullYear() === currentYear;
+                    })
+                    .reduce((total, entry) => total + entry.hours, 0);
+                
+                memberDiv.innerHTML = `<h3>${member}</h3>`;
+                
+                if (memberEntries.length === 0) {
+                    memberDiv.innerHTML += '<p style="color: #6c757d; font-style: italic;">No activities recorded yet</p>';
+                } else {
+                    memberEntries.forEach((entry, index) => {
+                        const entryDiv = document.createElement('div');
+                        entryDiv.className = 'entry';
+                        entryDiv.innerHTML = `
+                            <div class="entry-date">${formatDate(entry.date)}</div>
+                            <div class="entry-description">${entry.description}</div>
+                            <div class="entry-hours">${entry.hours} hour${entry.hours !== 1 ? 's' : ''}</div>
+                            <button class="delete-button" onclick="deleteEntry('${member}', ${index})">Delete</button>
+                        `;
+                        memberDiv.appendChild(entryDiv);
+                    });
+                }
+                
+                // Add monthly summary
+                const summaryDiv = document.createElement('div');
+                summaryDiv.className = 'monthly-summary';
+                const monthName = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+                const hoursNeeded = Math.max(0, 2.5 - monthlyHours);
+                
+                if (monthlyHours >= 2.5) {
+                    summaryDiv.innerHTML = `<strong>${monthName}:</strong> ${monthlyHours.toFixed(1)} hours completed ✅ (Requirement met!)`;
+                    summaryDiv.style.backgroundColor = '#d4edda';
+                    summaryDiv.style.color = '#155724';
+                } else {
+                    summaryDiv.innerHTML = `<strong>${monthName}:</strong> ${monthlyHours.toFixed(1)} hours completed (${hoursNeeded.toFixed(1)} more hours needed)`;
+                }
+                
+                memberDiv.appendChild(summaryDiv);
+                container.appendChild(memberDiv);
+            });
+        }
+        
+        // Delete entry function
+        function deleteEntry(member, index) {
+            if (confirm('Are you sure you want to delete this entry?')) {
+                educationData[member].splice(index, 1);
+                localStorage.setItem('simCenterEducation', JSON.stringify(educationData));
+                displayEntries();
+                showAlert('Entry deleted successfully', 'warning');
+            }
+        }
+        
+        // Format date function
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+        
+        // Show alert function
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alert-container');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 3000);
+        }
+        
+        // Initial display
+        displayEntries();
+        
+        // Set today's date as default
+        document.getElementById('activity-date').valueAsDate = new Date();
+    </script>
+</body>
+</html>
