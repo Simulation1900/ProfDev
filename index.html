@@ -515,6 +515,23 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         .collapsible {
             cursor: pointer;
             user-select: none;
@@ -808,8 +825,14 @@
 
             const username = document.getElementById('login-username').value;
             const password = document.getElementById('login-password').value;
+            const submitButton = e.target.querySelector('button[type="submit"]');
+            const originalText = submitButton.innerHTML;
 
             try {
+                // Show loading state
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<span class="spinner"></span>Signing in...';
+
                 const response = await fetch(`${API_BASE_URL}/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -820,6 +843,8 @@
 
                 if (!response.ok) {
                     showLoginAlert(data.error || 'Login failed', 'error');
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = originalText;
                     return;
                 }
 
@@ -833,7 +858,9 @@
 
             } catch (err) {
                 console.error('Login error:', err);
-                showLoginAlert('Unable to connect to server', 'error');
+                showLoginAlert('Unable to connect to server. This may take a moment if the server is starting up...', 'error');
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalText;
             }
         });
 
