@@ -483,6 +483,110 @@
             background-color: var(--error-dark);
         }
 
+        .edit-button {
+            background-color: #6c757d;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .edit-button:hover {
+            background-color: #5a6268;
+        }
+
+        /* Edit Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background-color: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 30px;
+            width: 90%;
+            max-width: 560px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .modal h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* Character counter */
+        .char-counter {
+            font-size: 0.8em;
+            color: var(--text-muted);
+            text-align: right;
+            margin-top: 4px;
+        }
+
+        .char-counter.near-limit {
+            color: var(--warning-color);
+        }
+
+        .char-counter.at-limit {
+            color: var(--error-color);
+            font-weight: bold;
+        }
+
+        /* Chart month nav */
+        .chart-nav {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-nav-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 4px;
+            padding: 4px 10px;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1;
+        }
+
+        .chart-nav-btn:hover {
+            background-color: var(--bg-hover);
+        }
+
+        .chart-nav-btn:disabled {
+            opacity: 0.4;
+            cursor: default;
+        }
+
+        .chart-month-label {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            min-width: 110px;
+            text-align: center;
+        }
+
         .hidden {
             display: none !important;
         }
@@ -621,10 +725,57 @@
             </div>
         </div>
 
+        <!-- Edit Entry Modal -->
+        <div id="edit-modal" class="modal-overlay" onclick="closeEditModal(event)">
+            <div class="modal">
+                <h3>Edit Entry</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div class="form-group">
+                        <label for="edit-date">Date:</label>
+                        <input type="date" id="edit-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-category">Category:</label>
+                        <select id="edit-category">
+                            <option value="Webinar">Webinar</option>
+                            <option value="Podcast">Podcast</option>
+                            <option value="Article">Article/Journal</option>
+                            <option value="Book">Book</option>
+                            <option value="Conference">Conference/Workshop</option>
+                            <option value="Video">Video Tutorial</option>
+                            <option value="Course">Online Course</option>
+                            <option value="Meeting">Professional Meeting</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-hours">Hours:</label>
+                        <input type="number" id="edit-hours" class="hours-input" min="0.25" max="24" step="0.25" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="edit-description">Activity Description:</label>
+                    <textarea id="edit-description" maxlength="500" required oninput="updateEditCounter()"></textarea>
+                    <div class="char-counter" id="edit-char-counter">0 / 500</div>
+                </div>
+                <div class="modal-buttons">
+                    <button class="button-primary" onclick="saveEntryEdit()">Save Changes</button>
+                    <button class="button-secondary" onclick="closeEditModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Charts -->
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; margin-bottom: 30px;">
             <div class="chart-container">
-                <h3>Monthly Progress</h3>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                    <h3 style="margin: 0;">Monthly Progress</h3>
+                    <div class="chart-nav">
+                        <button class="chart-nav-btn" id="chart-prev-btn" onclick="navigateChart(-1)">&#9664;</button>
+                        <span class="chart-month-label" id="chart-month-label"></span>
+                        <button class="chart-nav-btn" id="chart-next-btn" onclick="navigateChart(1)">&#9654;</button>
+                    </div>
+                </div>
                 <div class="chart-wrapper">
                     <canvas id="monthlyChart"></canvas>
                 </div>
@@ -690,7 +841,8 @@
 
                 <div class="form-group">
                     <label for="activity-description">Activity Description:</label>
-                    <textarea id="activity-description" required placeholder="Enter the activity details, including the source, topic, and what you learned..."></textarea>
+                    <textarea id="activity-description" maxlength="500" required placeholder="Enter the activity details, including the source, topic, and what you learned..." oninput="updateAddCounter()"></textarea>
+                    <div class="char-counter" id="add-char-counter">0 / 500</div>
                 </div>
 
                 <button type="submit" class="button-primary" id="submit-button">Submit Activity</button>
@@ -768,6 +920,14 @@
         let allUsers = [];
         let filteredEntries = [];
         let currentFilter = 'all';
+
+        // Chart month navigation state
+        const _now = new Date();
+        let chartDisplayMonth = _now.getMonth();
+        let chartDisplayYear = _now.getFullYear();
+
+        // Edit state
+        let editingEntryId = null;
 
         // Charts
         let monthlyChart = null;
@@ -1034,10 +1194,38 @@
             document.getElementById('stat-total').textContent = monthlyEntries.length;
         }
 
+        // Chart month navigation
+        function navigateChart(direction) {
+            chartDisplayMonth += direction;
+            if (chartDisplayMonth > 11) { chartDisplayMonth = 0; chartDisplayYear++; }
+            if (chartDisplayMonth < 0)  { chartDisplayMonth = 11; chartDisplayYear--; }
+            // Prevent going past current month
+            const now = new Date();
+            if (chartDisplayYear > now.getFullYear() ||
+                (chartDisplayYear === now.getFullYear() && chartDisplayMonth > now.getMonth())) {
+                chartDisplayMonth = now.getMonth();
+                chartDisplayYear = now.getFullYear();
+            }
+            updateCharts();
+        }
+
+        function updateChartNavLabel() {
+            const label = new Date(chartDisplayYear, chartDisplayMonth, 1)
+                .toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            document.getElementById('chart-month-label').textContent = label;
+
+            // Disable "next" if we're already at the current month
+            const now = new Date();
+            const atCurrent = chartDisplayYear === now.getFullYear() && chartDisplayMonth === now.getMonth();
+            document.getElementById('chart-next-btn').disabled = atCurrent;
+        }
+
         // Charts
         function updateCharts() {
-            const currentMonth = new Date().getMonth();
-            const currentYear = new Date().getFullYear();
+            const currentMonth = chartDisplayMonth;
+            const currentYear = chartDisplayYear;
+
+            updateChartNavLabel();
 
             // Detect dark mode
             const isDarkMode = document.body.classList.contains('dark-mode');
@@ -1070,11 +1258,14 @@
             });
 
             const sortedUsers = Object.keys(userHours).sort((a, b) => userHours[b] - userHours[a]);
+            const chartMonthLabel = new Date(currentYear, currentMonth, 1)
+                .toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
             const monthlyData = {
                 labels: sortedUsers.map(id => userNames[id]),
                 datasets: [
                     {
-                        label: 'Hours This Month',
+                        label: `Hours — ${chartMonthLabel}`,
                         data: sortedUsers.map(id => userHours[id]),
                         backgroundColor: sortedUsers.map(id => userHours[id] >= 2.5 ? successColor : warningColor),
                         borderColor: primaryColor,
@@ -1308,6 +1499,7 @@
                         <div class="entry-description">${escapeHtml(entry.Description)}</div>
                         <div class="entry-hours">
                             ${entry.Hours} hour${entry.Hours !== 1 ? 's' : ''}
+                            ${canDelete ? `<button class="edit-button" onclick="editEntry(${entry.EntryID})">Edit</button>` : ''}
                             ${canDelete ? `<button class="delete-button" onclick="deleteEntry(${entry.EntryID})">Delete</button>` : ''}
                         </div>
                     `;
@@ -1453,6 +1645,90 @@
         function toggleSection(element) {
             element.classList.toggle('collapsed');
             element.nextElementSibling.classList.toggle('collapsed');
+        }
+
+        // ---- Character counters ----
+        function updateCounterEl(length, el) {
+            el.textContent = `${length} / 500`;
+            el.className = 'char-counter';
+            if (length >= 500) el.classList.add('at-limit');
+            else if (length >= 450) el.classList.add('near-limit');
+        }
+
+        function updateAddCounter() {
+            const len = document.getElementById('activity-description').value.length;
+            updateCounterEl(len, document.getElementById('add-char-counter'));
+        }
+
+        function updateEditCounter() {
+            const len = document.getElementById('edit-description').value.length;
+            updateCounterEl(len, document.getElementById('edit-char-counter'));
+        }
+
+        // ---- Edit entry ----
+        function editEntry(entryId) {
+            const entry = allEntries.find(e => e.EntryID === entryId);
+            if (!entry) return;
+
+            editingEntryId = entryId;
+
+            // Populate modal fields
+            document.getElementById('edit-date').value = entry.ActivityDate.split('T')[0];
+            document.getElementById('edit-hours').value = entry.Hours;
+            document.getElementById('edit-description').value = entry.Description;
+            document.getElementById('edit-category').value = entry.Category || 'Other';
+            updateEditCounter();
+
+            document.getElementById('edit-modal').classList.add('active');
+        }
+
+        function closeEditModal(event) {
+            // Close when clicking the overlay background (not modal content), or called directly
+            if (event && event.target !== document.getElementById('edit-modal')) return;
+            document.getElementById('edit-modal').classList.remove('active');
+            editingEntryId = null;
+        }
+
+        async function saveEntryEdit() {
+            if (!editingEntryId) return;
+
+            const date = document.getElementById('edit-date').value;
+            const hours = parseFloat(document.getElementById('edit-hours').value);
+            const description = document.getElementById('edit-description').value;
+            const category = document.getElementById('edit-category').value;
+
+            if (!date || !hours || !description) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/education/entries/${editingEntryId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ date, hours, description, category })
+                });
+
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.error || 'Failed to update entry');
+                }
+
+                document.getElementById('edit-modal').classList.remove('active');
+                editingEntryId = null;
+
+                showAlert('Entry updated successfully!', 'success');
+                await loadEntries();
+                updateDashboard();
+                updateCharts();
+
+            } catch (err) {
+                console.error('Error updating entry:', err);
+                showAlert(err.message, 'error');
+            }
         }
     </script>
 </body>
