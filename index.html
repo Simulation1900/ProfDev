@@ -1203,7 +1203,7 @@
                 const filterUser = document.getElementById('filter-user');
                 filterUser.innerHTML = '<option value="">All Team Members</option>';
                 allUsers.forEach(user => {
-                    if (!excludeUsers.includes(user.full_name)) {
+                    if (!EXCLUDED_USERS.includes(user.full_name)) {
                         const option = document.createElement('option');
                         option.value = user.id;
                         option.textContent = user.full_name;
