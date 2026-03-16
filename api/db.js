@@ -105,8 +105,8 @@ async function addEducationEntry(entry) {
             .input('userId', sql.UniqueIdentifier, entry.userId)
             .input('activityDate', sql.Date, entry.date)
             .input('hours', sql.Decimal(4, 2), entry.hours)
-            .input('description', sql.NVarChar, entry.description)
-            .input('category', sql.NVarChar, entry.category || 'General')
+            .input('description', sql.NVarChar(500), entry.description)
+            .input('category', sql.NVarChar(100), entry.category || 'General')
             .query(`
                 INSERT INTO EducationEntries (UserID, ActivityDate, Hours, Description, Category, CreatedDate)
                 OUTPUT INSERTED.*
@@ -175,7 +175,7 @@ async function updateEducationEntry(entryId, userId, { date, hours, description,
             .input('activityDate', sql.Date, date)
             .input('hours', sql.Decimal(4, 2), hours)
             .input('description', sql.NVarChar(500), description)
-            .input('category', sql.NVarChar, category || 'General')
+            .input('category', sql.NVarChar(100), category || 'General')
             .query(`
                 UPDATE EducationEntries
                 SET ActivityDate = @activityDate,

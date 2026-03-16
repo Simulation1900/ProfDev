@@ -67,33 +67,44 @@
         .header {
             background-color: var(--primary-color);
             color: white;
-            padding: 30px;
+            padding: 20px 30px;
             border-radius: 10px;
             margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .header-center {
             text-align: center;
-            position: relative;
+            flex: 1;
+        }
+
+        .header-left {
+            min-width: 120px;
         }
 
         .header h1 {
             margin: 0;
-            font-size: 2em;
+            font-size: 1.7em;
         }
 
         .header p {
-            margin: 10px 0 0 0;
+            margin: 6px 0 0 0;
             opacity: 0.9;
+            font-size: 0.9em;
         }
 
         .user-info {
-            position: absolute;
-            top: 20px;
-            right: 30px;
             text-align: right;
+            min-width: 120px;
         }
 
         .user-info span {
             display: block;
             margin-bottom: 5px;
+            font-size: 0.9em;
         }
 
         .logout-button {
@@ -157,6 +168,13 @@
             border-radius: 10px;
             box-shadow: var(--card-shadow);
             text-align: center;
+            border-top: 3px solid var(--primary-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px var(--shadow);
         }
 
         .stat-number {
@@ -234,13 +252,14 @@
         }
 
         .filter-button {
-            padding: 8px 16px;
-            border: 1px solid var(--primary-color);
+            padding: 7px 16px;
+            border: 1.5px solid var(--primary-color);
             background-color: var(--bg-secondary);
             color: var(--primary-color);
-            border-radius: 5px;
+            border-radius: 20px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
+            font-weight: 500;
             transition: all 0.2s;
         }
 
@@ -281,6 +300,19 @@
             box-sizing: border-box;
             background-color: var(--bg-secondary);
             color: var(--text-primary);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(30, 77, 139, 0.15);
+        }
+
+        body.dark-mode select:focus,
+        body.dark-mode input:focus,
+        body.dark-mode textarea:focus {
+            box-shadow: 0 0 0 3px rgba(74, 143, 216, 0.2);
         }
 
         textarea {
@@ -377,17 +409,46 @@
             border-radius: 5px;
             margin-bottom: 10px;
             border-left: 4px solid var(--primary-color);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+        }
+
+        .entry:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px var(--shadow);
+            background-color: var(--bg-hover);
         }
 
         .entry-category {
             display: inline-block;
-            background-color: var(--border-light);
-            color: var(--text-secondary);
             padding: 3px 10px;
             border-radius: 12px;
-            font-size: 0.8em;
+            font-size: 0.78em;
+            font-weight: 600;
             margin-left: 10px;
+            letter-spacing: 0.02em;
         }
+
+        /* Category badge colors — light mode */
+        .cat-webinar    { background-color: #dbeafe; color: #1e40af; }
+        .cat-podcast    { background-color: #ede9fe; color: #5b21b6; }
+        .cat-article    { background-color: #d1fae5; color: #065f46; }
+        .cat-book       { background-color: #fef3c7; color: #92400e; }
+        .cat-conference { background-color: #fee2e2; color: #991b1b; }
+        .cat-video      { background-color: #fce7f3; color: #9d174d; }
+        .cat-course     { background-color: #cffafe; color: #155e75; }
+        .cat-meeting    { background-color: #f0fdf4; color: #166534; }
+        .cat-other      { background-color: var(--border-light); color: var(--text-secondary); }
+
+        /* Category badge colors — dark mode */
+        body.dark-mode .cat-webinar    { background-color: #1e3a5f; color: #93c5fd; }
+        body.dark-mode .cat-podcast    { background-color: #2e1a5c; color: #c4b5fd; }
+        body.dark-mode .cat-article    { background-color: #064e3b; color: #6ee7b7; }
+        body.dark-mode .cat-book       { background-color: #451a03; color: #fcd34d; }
+        body.dark-mode .cat-conference { background-color: #450a0a; color: #fca5a5; }
+        body.dark-mode .cat-video      { background-color: #500724; color: #f9a8d4; }
+        body.dark-mode .cat-course     { background-color: #083344; color: #67e8f9; }
+        body.dark-mode .cat-meeting    { background-color: #052e16; color: #86efac; }
+        body.dark-mode .cat-other      { background-color: var(--border-light); color: var(--text-secondary); }
 
         .entry-date {
             color: var(--text-muted);
@@ -422,13 +483,8 @@
         .progress-fill {
             background-color: var(--success-color);
             height: 100%;
-            transition: width 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 0.85em;
-            font-weight: bold;
+            transition: width 0.5s ease;
+            border-radius: 5px;
         }
 
         .progress-fill.partial {
@@ -457,6 +513,24 @@
             background-color: #fff3cd;
             color: #856404;
             border: 1px solid #ffeeba;
+        }
+
+        body.dark-mode .alert-success {
+            background-color: #1a3d24;
+            color: #6fcf87;
+            border-color: #2d6a3f;
+        }
+
+        body.dark-mode .alert-error {
+            background-color: #3d1a1a;
+            color: #f4867c;
+            border-color: #6a2d2d;
+        }
+
+        body.dark-mode .alert-warning {
+            background-color: #3d3010;
+            color: #ffd166;
+            border-color: #6a5520;
         }
 
         .requirement-notice {
@@ -500,20 +574,23 @@
 
         /* Edit Modal */
         .modal-overlay {
-            display: none;
+            display: flex;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0,0,0,0);
             z-index: 2000;
             justify-content: center;
             align-items: center;
+            pointer-events: none;
+            transition: background-color 0.2s ease;
         }
 
         .modal-overlay.active {
-            display: flex;
+            background-color: rgba(0,0,0,0.5);
+            pointer-events: all;
         }
 
         .modal {
@@ -523,6 +600,14 @@
             width: 90%;
             max-width: 560px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            opacity: 0;
+            transform: translateY(-12px) scale(0.98);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .modal-overlay.active .modal {
+            opacity: 1;
+            transform: translateY(0) scale(1);
         }
 
         .modal h3 {
@@ -595,28 +680,41 @@
             text-align: center;
             padding: 40px;
             color: var(--text-muted);
+            animation: pulse 1.6s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
         }
 
         /* Dark mode toggle button */
         .theme-toggle {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background-color: var(--primary-color);
+            background-color: rgba(255,255,255,0.15);
             color: white;
-            border: 2px solid var(--border-color);
-            padding: 8px 16px;
-            border-radius: 5px;
+            border: 1.5px solid rgba(255,255,255,0.5);
+            padding: 7px 14px;
+            border-radius: 20px;
             cursor: pointer;
-            font-size: 14px;
-            box-shadow: var(--card-shadow);
-            z-index: 1000;
-            transition: all 0.3s ease;
+            font-size: 13px;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+            white-space: nowrap;
         }
 
         .theme-toggle:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            background-color: rgba(255,255,255,0.25);
+        }
+
+        /* Login-screen toggle uses card colors instead of header colors */
+        .theme-toggle-login {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-color: var(--border-color);
+        }
+
+        .theme-toggle-login:hover {
+            background-color: var(--bg-hover);
         }
 
         /* Loading spinner */
@@ -665,8 +763,11 @@
 <body>
     <!-- Login Screen -->
     <div id="login-screen" class="login-container">
+        <div style="text-align: right; margin-bottom: 10px;">
+            <button class="theme-toggle theme-toggle-login" onclick="toggleDarkMode()">🌙 Dark Mode</button>
+        </div>
         <h2>Sim Center Education Tracker</h2>
-        <p style="text-align: center; color: #6c757d; margin-bottom: 30px;">
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 30px;">
             Sign in with your OvertimeTracker credentials
         </p>
         <div id="login-alert-container"></div>
@@ -683,18 +784,20 @@
         </form>
     </div>
 
-    <!-- Dark Mode Toggle (Always Visible) -->
-    <button class="theme-toggle" onclick="toggleDarkMode()">🌙 Dark Mode</button>
-
     <!-- Main Application -->
     <div id="app-screen" class="hidden">
         <div class="header">
+            <div class="header-left">
+                <button class="theme-toggle" onclick="toggleDarkMode()">🌙 Dark Mode</button>
+            </div>
+            <div class="header-center">
+                <h1>Continuing Education for the Sim Center Ops Team</h1>
+                <p>Professional Development Tracking System</p>
+            </div>
             <div class="user-info">
                 <span id="user-display-name"></span>
                 <button class="logout-button" onclick="logout()">Sign Out</button>
             </div>
-            <h1>Continuing Education for the Sim Center Ops Team</h1>
-            <p>Professional Development Tracking System</p>
         </div>
 
         <div class="requirement-notice">
@@ -759,7 +862,7 @@
                     <div class="char-counter" id="edit-char-counter">0 / 500</div>
                 </div>
                 <div class="modal-buttons">
-                    <button class="button-primary" onclick="saveEntryEdit()">Save Changes</button>
+                    <button class="button-primary" id="save-edit-btn" onclick="saveEntryEdit()">Save Changes</button>
                     <button class="button-secondary" onclick="closeEditModal()">Cancel</button>
                 </div>
             </div>
@@ -794,7 +897,7 @@
             <div class="collapse-content">
                 <p>This system documents the ongoing professional development of the Simulation Operations Team. Maintaining regular continuing education is both a requirement for SSH Accreditation and a reflection of our commitment to excellence in simulation-based education.</p>
 
-                <h3 style="color: #1e4d8b; margin-top: 20px;">Acceptable Activities</h3>
+                <h3 style="color: var(--primary-color); margin-top: 20px;">Acceptable Activities</h3>
                 <ul>
                     <li>Professional podcasts, webinars, or online courses related to simulation, healthcare education, or operations</li>
                     <li>Books, journal articles, or trade publications focused on simulation, adult learning, or technology integration</li>
@@ -851,12 +954,12 @@
 
         <!-- Filter Section -->
         <div class="filter-section">
-            <h3 style="margin-top: 0; color: #1e4d8b;">Filter & Search</h3>
+            <h3 style="margin-top: 0; color: var(--primary-color);">Filter & Search</h3>
 
             <div class="filter-controls">
                 <div class="filter-group">
                     <label>Search:</label>
-                    <input type="text" id="search-input" placeholder="Search descriptions..." oninput="applyFilters()">
+                    <input type="text" id="search-input" placeholder="Search descriptions...">
                 </div>
                 <div class="filter-group">
                     <label>Team Member:</label>
@@ -882,7 +985,7 @@
             </div>
 
             <div>
-                <label style="display: block; margin-bottom: 10px; font-size: 0.85em; color: #6c757d; font-weight: 600;">Quick Filters:</label>
+                <label style="display: block; margin-bottom: 10px; font-size: 0.85em; color: var(--text-muted); font-weight: 600;">Quick Filters:</label>
                 <div class="quick-filters">
                     <button class="filter-button active" onclick="setDateFilter('all')">All Time</button>
                     <button class="filter-button" onclick="setDateFilter('thisMonth')">This Month</button>
@@ -897,9 +1000,12 @@
         <div class="entries-section">
             <div class="toolbar">
                 <h2 style="margin: 0;">Team Education Log</h2>
-                <button class="button-success" onclick="exportToCSV()">
-                    📊 Export to CSV
-                </button>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <span id="entries-count" style="font-size: 0.9em; color: var(--text-muted);"></span>
+                    <button class="button-success" onclick="exportToCSV()">
+                        📊 Export to CSV
+                    </button>
+                </div>
             </div>
             <div id="entries-container">
                 <div class="loading">Loading education log...</div>
@@ -912,6 +1018,10 @@
         const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
             ? 'http://localhost:7071/api'
             : 'https://profdev-api.azurewebsites.net/api';
+
+        // App-wide constants
+        const EXCLUDED_USERS = ['Sim Center', 'System Administrator', 'Sophia Martinez'];
+        const MONTHLY_HOURS_REQUIREMENT = 2.5;
 
         // State management
         let currentUser = null;
@@ -967,13 +1077,22 @@
             // Initialize dark mode preference
             initializeDarkMode();
 
+            // Debounce search input to avoid filtering on every keystroke
+            document.getElementById('search-input').addEventListener('input', debounce(applyFilters, 300));
+
             const token = localStorage.getItem('authToken');
             const user = localStorage.getItem('currentUser');
 
             if (token && user) {
-                authToken = token;
-                currentUser = JSON.parse(user);
-                verifyTokenAndLoadApp();
+                try {
+                    authToken = token;
+                    currentUser = JSON.parse(user);
+                    verifyTokenAndLoadApp();
+                } catch (e) {
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('currentUser');
+                    showLoginScreen();
+                }
             } else {
                 showLoginScreen();
             }
@@ -1081,7 +1200,6 @@
                 allUsers = await response.json();
 
                 // Populate filter dropdown (exclude test users)
-                const excludeUsers = ['Sim Center', 'System Administrator', 'Sophia Martinez'];
                 const filterUser = document.getElementById('filter-user');
                 filterUser.innerHTML = '<option value="">All Team Members</option>';
                 allUsers.forEach(user => {
@@ -1149,8 +1267,7 @@
             const currentYear = new Date().getFullYear();
 
             // Filter out test users
-            const excludeUsers = ['Sim Center', 'System Administrator', 'Sophia Martinez'];
-            const realUsers = allUsers.filter(u => !excludeUsers.includes(u.full_name));
+            const realUsers = allUsers.filter(u => !EXCLUDED_USERS.includes(u.full_name));
 
             // Calculate monthly entries
             const monthlyEntries = allEntries.filter(e => {
@@ -1163,11 +1280,11 @@
             const myHours = myEntries.reduce((sum, e) => sum + parseFloat(e.Hours), 0);
             document.getElementById('stat-my-hours').textContent = myHours.toFixed(1);
 
-            if (myHours >= 2.5) {
+            if (myHours >= MONTHLY_HOURS_REQUIREMENT) {
                 document.getElementById('stat-my-status').textContent = '✅ Requirement met!';
                 document.getElementById('stat-my-status').style.color = '#28a745';
             } else {
-                const needed = (2.5 - myHours).toFixed(1);
+                const needed = (MONTHLY_HOURS_REQUIREMENT - myHours).toFixed(1);
                 document.getElementById('stat-my-status').textContent = `${needed} hours needed`;
                 document.getElementById('stat-my-status').style.color = '#dc3545';
             }
@@ -1185,7 +1302,7 @@
                     userHours[e.UserID] += parseFloat(e.Hours);
                 }
             });
-            const compliant = Object.values(userHours).filter(h => h >= 2.5).length;
+            const compliant = Object.values(userHours).filter(h => h >= MONTHLY_HOURS_REQUIREMENT).length;
             const compliancePercent = realUsers.length > 0 ? Math.round((compliant / realUsers.length) * 100) : 0;
             document.getElementById('stat-compliance').textContent = `${compliancePercent}%`;
             document.getElementById('stat-compliance-text').textContent = `${compliant} of ${realUsers.length} members`;
@@ -1237,8 +1354,7 @@
             const primaryColor = isDarkMode ? '#4a8fd8' : '#1e4d8b';
 
             // Filter out test users
-            const excludeUsers = ['Sim Center', 'System Administrator', 'Sophia Martinez'];
-            const realUsers = allUsers.filter(u => !excludeUsers.includes(u.full_name));
+            const realUsers = allUsers.filter(u => !EXCLUDED_USERS.includes(u.full_name));
 
             // Monthly progress chart
             const userHours = {};
@@ -1267,14 +1383,14 @@
                     {
                         label: `Hours — ${chartMonthLabel}`,
                         data: sortedUsers.map(id => userHours[id]),
-                        backgroundColor: sortedUsers.map(id => userHours[id] >= 2.5 ? successColor : warningColor),
+                        backgroundColor: sortedUsers.map(id => userHours[id] >= MONTHLY_HOURS_REQUIREMENT ? successColor : warningColor),
                         borderColor: primaryColor,
                         borderWidth: 1,
                         order: 2
                     },
                     {
                         label: 'Requirement (2.5 hrs)',
-                        data: sortedUsers.map(() => 2.5),
+                        data: sortedUsers.map(() => MONTHLY_HOURS_REQUIREMENT),
                         type: 'line',
                         borderColor: errorColor,
                         borderWidth: 2,
@@ -1449,6 +1565,10 @@
             const container = document.getElementById('entries-container');
             container.innerHTML = '';
 
+            const countEl = document.getElementById('entries-count');
+            const total = filteredEntries.length;
+            countEl.textContent = total === 1 ? '1 entry' : `${total} entries`;
+
             const entriesByUser = {};
             allUsers.forEach(user => {
                 entriesByUser[user.id] = {
@@ -1474,12 +1594,12 @@
                     })
                     .reduce((total, entry) => total + parseFloat(entry.Hours), 0);
 
-                const progressPercent = Math.min(100, (monthlyHours / 2.5) * 100);
+                const progressPercent = Math.min(100, (monthlyHours / MONTHLY_HOURS_REQUIREMENT) * 100);
 
                 memberDiv.innerHTML = `
                     <h3>
-                        <span>${user.full_name}</span>
-                        <span style="font-size: 0.8em; font-weight: normal; color: #6c757d;">
+                        <span>${escapeHtml(user.full_name)}</span>
+                        <span style="font-size: 0.8em; font-weight: normal; color: var(--text-muted);">
                             ${entries.length} ${entries.length === 1 ? 'entry' : 'entries'}
                         </span>
                     </h3>
@@ -1494,7 +1614,7 @@
                     entryDiv.innerHTML = `
                         <div class="entry-date">
                             ${formatDate(entry.ActivityDate)}
-                            ${entry.Category ? `<span class="entry-category">${entry.Category}</span>` : ''}
+                            ${categoryBadge(entry.Category)}
                         </div>
                         <div class="entry-description">${escapeHtml(entry.Description)}</div>
                         <div class="entry-hours">
@@ -1512,11 +1632,12 @@
                 const monthName = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 
                 summaryDiv.innerHTML = `
-                    <strong>${monthName}:</strong> ${monthlyHours.toFixed(1)} hours completed
+                    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+                        <strong>${monthName}</strong>
+                        <span style="font-size: 0.85em; color: var(--text-muted);">${monthlyHours.toFixed(1)} / ${MONTHLY_HOURS_REQUIREMENT} hrs &nbsp;·&nbsp; ${progressPercent.toFixed(0)}%</span>
+                    </div>
                     <div class="progress-bar">
-                        <div class="progress-fill ${monthlyHours >= 2.5 ? '' : 'partial'}" style="width: ${progressPercent}%">
-                            ${progressPercent.toFixed(0)}%
-                        </div>
+                        <div class="progress-fill ${monthlyHours >= MONTHLY_HOURS_REQUIREMENT ? '' : 'partial'}" style="width: ${progressPercent}%"></div>
                     </div>
                 `;
 
@@ -1525,7 +1646,7 @@
             });
 
             if (container.children.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #6c757d; padding: 40px;">No entries match your filters</p>';
+                container.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 40px;">No entries match your filters</p>';
             }
         }
 
@@ -1615,7 +1736,8 @@
             alert.textContent = message;
             alertContainer.innerHTML = '';
             alertContainer.appendChild(alert);
-            setTimeout(() => alert.remove(), 3000);
+            const timeout = type === 'error' ? 6000 : 3000;
+            setTimeout(() => alert.remove(), timeout);
         }
 
         function showLoginAlert(message, type) {
@@ -1640,6 +1762,31 @@
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+
+        const CATEGORY_CLASS_MAP = {
+            'Webinar':    'cat-webinar',
+            'Podcast':    'cat-podcast',
+            'Article':    'cat-article',
+            'Book':       'cat-book',
+            'Conference': 'cat-conference',
+            'Video':      'cat-video',
+            'Course':     'cat-course',
+            'Meeting':    'cat-meeting',
+        };
+
+        function categoryBadge(category) {
+            if (!category) return '';
+            const cls = CATEGORY_CLASS_MAP[category] || 'cat-other';
+            return `<span class="entry-category ${cls}">${escapeHtml(category)}</span>`;
+        }
+
+        function debounce(fn, delay) {
+            let timer;
+            return function(...args) {
+                clearTimeout(timer);
+                timer = setTimeout(() => fn.apply(this, args), delay);
+            };
         }
 
         function toggleSection(element) {
@@ -1698,9 +1845,13 @@
             const category = document.getElementById('edit-category').value;
 
             if (!date || !hours || !description) {
-                alert('Please fill in all required fields.');
+                showAlert('Please fill in all required fields.', 'error');
                 return;
             }
+
+            const saveBtn = document.getElementById('save-edit-btn');
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Saving...';
 
             try {
                 const response = await fetch(`${API_BASE_URL}/education/entries/${editingEntryId}`, {
@@ -1728,6 +1879,9 @@
             } catch (err) {
                 console.error('Error updating entry:', err);
                 showAlert(err.message, 'error');
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Save Changes';
             }
         }
     </script>

@@ -1,6 +1,8 @@
 const { verifyToken } = require('../shared/auth-helper');
 const { addEducationEntry } = require('../db');
 
+const VALID_CATEGORIES = ['Webinar', 'Podcast', 'Article', 'Book', 'Conference', 'Video', 'Course', 'Meeting', 'Other', 'General'];
+
 module.exports = async function (context, req) {
     try {
         const user = verifyToken(req);
@@ -10,6 +12,14 @@ module.exports = async function (context, req) {
             context.res = {
                 status: 400,
                 body: { error: 'Date, hours, and description are required' }
+            };
+            return;
+        }
+
+        if (category && !VALID_CATEGORIES.includes(category)) {
+            context.res = {
+                status: 400,
+                body: { error: `Invalid category. Must be one of: ${VALID_CATEGORIES.join(', ')}` }
             };
             return;
         }
