@@ -1145,13 +1145,14 @@
 
         async function verifyTokenAndLoadApp() {
             try {
-                const response = await fetch(`${API_BASE_URL}/verify`, {
-                    headers: { 'Authorization': `Bearer ${authToken}` }
-                });
+                // Fire verify and data fetches simultaneously to avoid waterfall on cold start
+                const [verifyResponse] = await Promise.all([
+                    fetch(`${API_BASE_URL}/verify`, { headers: { 'Authorization': `Bearer ${authToken}` } }),
+                    loadAppData()
+                ]);
 
-                if (response.ok) {
+                if (verifyResponse.ok) {
                     showAppScreen();
-                    loadAppData();
                 } else {
                     logout();
                 }
