@@ -155,7 +155,6 @@
         .login-container,
         .info-section,
         .stat-card,
-        .chart-container,
         .filter-section,
         .form-section,
         .entries-section,
@@ -433,7 +432,17 @@
             margin-bottom: 16px;
         }
 
-        .chart-container { padding: 24px; }
+        /* Deliberately without the backdrop blur the other panels carry:
+           a canvas inside a backdrop-filtered element fails to composite on
+           some GPUs, and a chart that renders blank is worse than a chart on
+           a plain surface. Charts read better on an opaque ground anyway. */
+        .chart-container {
+            padding: 24px;
+            background: var(--surface-solid);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
 
         .chart-container h3 {
             margin-bottom: 18px;
