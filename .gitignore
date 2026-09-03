@@ -28,3 +28,12 @@ Thumbs.db
 *.swo
 *~
 nul
+
+# Local test fixtures — this one holds a real credential
+test-login.json
+
+# Deployment artifacts
+api-deployment.zip
+api-deploy-full.zip
+api-check/
+api-check-new/
