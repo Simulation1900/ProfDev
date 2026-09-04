@@ -1228,6 +1228,22 @@
             // Debounce search input to avoid filtering on every keystroke
             document.getElementById('search-input').addEventListener('input', debounce(applyFilters, 300));
 
+            /* The hub sends people here with "#handoff=…". The code is
+               single-use and lives a minute, so it is spent before any stored
+               session is considered, and stripped from the address first so it
+               is not left behind in history or carried by a shared link. */
+            const handoff = /[#&]handoff=([^&]+)/.exec(window.location.hash);
+            if (handoff) {
+                history.replaceState({}, '', location.pathname + location.search);
+                signInWithHandoff(decodeURIComponent(handoff[1]));
+                return;
+            }
+
+            resumeStoredSession();
+        });
+
+        /* Whatever session this device already holds, if any. */
+        function resumeStoredSession() {
             const token = localStorage.getItem('authToken');
             const user = localStorage.getItem('currentUser');
 
@@ -1244,7 +1260,38 @@
             } else {
                 showLoginScreen();
             }
-        });
+        }
+
+        /* Exchange a hub code for a session here. Anything short of success
+           falls back to a stored session, and then to the sign-in screen —
+           which is where somebody would have started anyway, so a spent or
+           expired code is not worth an error of its own. */
+        async function signInWithHandoff(code) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/handoff`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code })
+                });
+
+                if (!response.ok) {
+                    resumeStoredSession();
+                    return;
+                }
+
+                const data = await response.json();
+                authToken = data.token;
+                currentUser = data.user;
+                localStorage.setItem('authToken', authToken);
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+                showAppScreen();
+                loadAppData();
+            } catch (err) {
+                console.error('Hand-off error:', err);
+                resumeStoredSession();
+            }
+        }
 
         // Login form handler
         document.getElementById('login-form').addEventListener('submit', async function(e) {
