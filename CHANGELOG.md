@@ -10,6 +10,23 @@ not the shape of the code.
 
 ---
 
+## 2026-09-16 — More contrast
+
+### Changed
+- The palette sits a step further from its ground in both themes, in step with
+  the rest of the suite; the chart reads its fallback colours from the same
+  place, so those moved with it.
+
+## 2026-09-04 — The account the rest of the suite uses
+
+### Added
+- **Arriving from the hub signs you straight in.** A single-use code is
+  exchanged here for a session, using this app's own service credential; what
+  comes back is an identity and nothing more.
+
+### Changed
+- The sign-in calls the account what it is: a BUCIES HUB account.
+
 ## 2026-09-03 — Shared design language, and two production fixes
 
 ### Changed
